@@ -7,7 +7,7 @@ numOfBasisElements(numNodes::Integer,p::Integer) = numNodes + p - 1 ## number of
 
 ## returns an index-function of basis-functions, which takes as input i in 1:k
 ## creates evenly-spaced nodes
-function splineBasisFuns(p::Integer, range::(Real,Real), numNodes::Integer)
+function splineBasisFuns(p::Integer, range::Tuple{Real,Real}, numNodes::Integer)
     intervalLen = (range[2]-range[1])/(numNodes-1)
     u = linspace(range[1] - p*intervalLen, range[2]+ p*intervalLen, totalNumNodes(numNodes,p))
     i -> B(p,u,i)
@@ -20,15 +20,15 @@ function splineBasisFuns(p::Integer, nodes::Vector{Float64})
 end
 
 
-cubicSplineBasisFuns(range::(Real,Real), numNodes::Integer) = splineBasisFuns(3, range, numNodes)
-quadraticSplineBasisFuns(range::(Real,Real), numNodes::Integer) = splineBasisFuns(2, range, numNodes)
-linearSplineBasisFuns(range::(Real,Real), numNodes::Integer) = splineBasisFuns(1, range, numNodes)
+cubicSplineBasisFuns(range::Tuple{Real,Real}, numNodes::Integer) = splineBasisFuns(3, range, numNodes)
+quadraticSplineBasisFuns(range::Tuple{Real,Real}, numNodes::Integer) = splineBasisFuns(2, range, numNodes)
+linearSplineBasisFuns(range::Tuple{Real,Real}, numNodes::Integer) = splineBasisFuns(1, range, numNodes)
 
 
 ## BFE "Basis Function Expansion"
 
 ## evenly-spaced nodes
-function splineBFE(p::Integer, x::Vector{Float64}, range::(Real,Real), numNodes::Integer)
+function splineBFE(p::Integer, x::Vector{Float64}, range::Tuple{Real,Real}, numNodes::Integer)
     funs = splineBasisFuns(p, range, numNodes)
     num = numOfBasisElements(numNodes,p)
     Float64[funs(i)(xj) for xj in x, i in 1:num]
@@ -42,11 +42,11 @@ function splineBFE(p::Integer, x::Vector{Float64}, nodes::Vector{Float64})
 end
 
 
-cubicSplineBFE(x::Vector{Float64}, range::(Real,Real), numNodes::Integer) =
+cubicSplineBFE(x::Vector{Float64}, range::Tuple{Real,Real}, numNodes::Integer) =
     splineBFE(3, x, range, numNodes)
-quadraticSplineBFE(x::Vector{Float64}, range::(Real,Real), numNodes::Integer) =
+quadraticSplineBFE(x::Vector{Float64}, range::Tuple{Real,Real}, numNodes::Integer) =
     splineBFE(2, x, range, numNodes)
-linearSplineBFE(x::Vector{Float64}, range::(Real,Real), numNodes::Integer) =
+linearSplineBFE(x::Vector{Float64}, range::Tuple{Real,Real}, numNodes::Integer) =
     splineBFE(1, x, range, numNodes)
 
 cubicSplineBFE(x::Vector{Float64}, nodes::Vector{Float64}) = splineBFE(3, x, nodes)
